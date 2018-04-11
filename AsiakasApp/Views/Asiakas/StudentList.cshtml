@@ -1,0 +1,63 @@
+﻿@model IEnumerable<AsiakasApp.Models.Asiakas>
+
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nimi)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Osoite)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Postinro)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Postitmp)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Luontipvm)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Asiakastyyppi.Selite)
+                </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nimi)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Osoite)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Postinro)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Postitmp)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Luontipvm)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Asiakastyyppi.Selite)
+            </td>
+            <td>
+                <a onclick="deleteClicked(@item.Avain)">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@section scripts
+    {
+    <script>
+
+
+    </script>
+}
+

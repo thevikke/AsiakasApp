@@ -1,0 +1,128 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Asiakashaku</h2>
+
+<form id="hakuehdot" method="post">
+    Nimi: <input type="text" id="name_search" /> <br />
+    Osoite: <input type="text" id="address" />
+    <input type="button" id="searh" value="Hae" onclick="getStudents();" />
+    <input type="button" id="new" value="Uusi opiskelija" onclick="newStudent();" />
+</form>
+
+@section scripts
+    {
+    <script>
+        $('#loading').hide();
+
+        function hideLoading() {
+            $('#loading').hide();
+        }
+
+        function getStudents(){
+
+            var name = $("#name_search").val();
+            var addr = $("#address").val();
+
+            $('#loading').show();
+            $("#divStudentList").load("/Asiakas/GetStudents", { name: name, address: addr }, hideLoading);
+            
+        }
+
+        function deleteClicked(id) {
+
+            // jQuery UI pitää lisät Bower:n kautta (Projektin päällä hiiren oikean napin alta Manage Bower Packages ... )
+            $("#deleteDialog").load("/Asiakas/DeleteView", { id: id },  function () {
+
+                $("#deleteDialog").dialog(
+                    {
+                        title: "Poistetaanko asiakas?", width: 600, height: 400, modal: true, buttons: {
+                            OK: function () {
+                                deleteStudent(id, $(this)); 
+                            },
+                            Cancel: function () { $(this).dialog("close") }
+                        }
+                    })
+            });
+            
+        }
+
+        function deleteStudent(id, dlg)
+        {
+            $.get("/Asiakas/Delete/" + id, function (data) {
+                if (data.status == "OK") {
+                    dlg.dialog("close");
+                    getStudents();
+                }
+            });
+
+        }
+
+
+        function newStudent() {
+            $("#newDialog").load("/Asiakas/CreateView", function () {
+                $("#newDialog").dialog(
+                    {
+                        title: "Anna opiskelijan tiedot", width: 600, height: 800, modal: true, buttons: {
+                            OK: function () {
+                                createStudent($(this));
+                            },
+                            Cancel: function () { $(this).dialog("close") }
+                        }
+                    })
+            });
+        }
+        function createStudent(dlg) {
+           /* $.post("/Asiakas/CreateStudent/" + { newoppilas: newoppilas }, function (data) {
+                if (data.status == "OK") {
+                    dlg.dialog("close");https://www.youtube.com/watch?v=YcNnMlQGGkE
+                    getStudents();
+                }
+            });*/
+            var nimi = $("#Nimi").val();
+            var osoite = $("#Osoite").val();
+            var postinro = $("#Postinro").val();
+            var postitmp = $("#Postitmp").val();
+            var luontipvm = $("#Luontipvm").val();
+            var asiakastyyppiID = $("#AsiakastyyppiID").val();
+
+            var newoppilas = {
+
+            };
+            newoppilas["Nimi"] = nimi;
+            newoppilas["Osoite"] = osoite;
+            newoppilas["Postinro"] = postinro;
+            newoppilas["Postitmp"] = postitmp;
+            newoppilas["Luontipvm"] = luontipvm;
+            newoppilas["AsiakastyyppiID"] = asiakastyyppiID;
+
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify(newoppilas),
+                url: "/Asiakas/CreateStudent/",
+                contentType: "application/json"
+            }).done(function (res) {
+                dlg.dialog("close");
+                getStudents();
+            });
+
+        }
+
+    </script>
+}
+
+<div id="loading">
+    <p><img src="~/images/loading.gif" /> Please Wait</p>
+</div>
+
+
+<div id="divStudentList">
+</div>
+
+<div id="deleteDialog">
+</div>
+
+<div id="newDialog">
+</div>
