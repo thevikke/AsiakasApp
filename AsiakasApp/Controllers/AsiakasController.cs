@@ -53,10 +53,22 @@ namespace AsiakasApp.Controllers
             return PartialView("Create");
         }
         [HttpPost]
-        public IActionResult CreateStudent(Asiakas newoppilas)//[FromBody]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateStudent([Bind("Avain,Nimi,Osoite,Postinro,Postitmp,Luontipvm,AsiakastyyppiID")] Asiakas newoppilas)
         {
-
-            return new JsonResult(new { status = "OK" });
+            if (ModelState.IsValid)
+            {
+                _context.Add(newoppilas);
+                await _context.SaveChangesAsync();
+                return Json(new
+                {
+                    msg = "Oppilas lisätty!"
+                });
+            }
+            return Json(new
+            {
+                msg = "Lisäys epäonnistui!"
+            });
         }
 
         public IActionResult GetStudents(string name, string address)

@@ -76,42 +76,22 @@
         }
         function createStudent(dlg) {
             debugger
-            /* $.post("/Asiakas/CreateStudent/" + { newoppilas: newoppilas }, function (data) {
-                if (data.status == "OK") {
-                    dlg.dialog("close");
-                    getStudents();
-                }
-            });
-            var nimi = $("#Nimi").val();
-            var osoite = $("#Osoite").val();
-            var postinro = $("#Postinro").val();
-            var postitmp = $("#Postitmp").val();
-            var luontipvm = $("#Luontipvm").val();
-            var asiakastyyppiID = $("#AsiakastyyppiID").val();
-
-            var newoppilas = {
-
-            };
-            newoppilas["Nimi"] = nimi;
-            newoppilas["Osoite"] = osoite;
-            newoppilas["Postinro"] = postinro;
-            newoppilas["Postitmp"] = postitmp;
-            newoppilas["Luontipvm"] = luontipvm;
-            newoppilas["AsiakastyyppiID"] = asiakastyyppiID;*/
 
             var newoppilas = $("#newStudentForm").serialize();
-
+            
             $.ajax({
                 type: "POST",
                 data: newoppilas,
                 url: "/Asiakas/CreateStudent/",
-                contentType: "application/json"
-            }).done(function (res) {
-                
-                dlg.dialog("close");
-                getStudents();
+                success: function (data) {
+                    dlg.dialog("close");
+                    getStudents();
+                },
+                error: function (data) {
+                    alert(data.msg); 
+                }
             });
-
+            
         }
 
     </script>
