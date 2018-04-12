@@ -9,12 +9,14 @@
     Nimi: <input type="text" id="name_search" /> <br />
     Osoite: <input type="text" id="address" />
     <input type="button" id="searh" value="Hae" onclick="getStudents();" />
-    <input type="button" id="new" value="Uusi opiskelija" onclick="newStudent();" />
+    <input type="button" id="new" value="Uusi opiskelija" onclick="newStudentClicked();" />
 </form>
 
 @section scripts
     {
     <script>
+            debugger
+            //------------------------------Search----------------------------------------------------------------------------------------------
         $('#loading').hide();
 
         function hideLoading() {
@@ -30,7 +32,7 @@
             $("#divStudentList").load("/Asiakas/GetStudents", { name: name, address: addr }, hideLoading);
             
         }
-
+            //------------------------------Delete----------------------------------------------------------------------------------------------
         function deleteClicked(id) {
 
             // jQuery UI pitää lisät Bower:n kautta (Projektin päällä hiiren oikean napin alta Manage Bower Packages ... )
@@ -45,8 +47,7 @@
                             Cancel: function () { $(this).dialog("close") }
                         }
                     })
-            });
-            
+            }); 
         }
 
         function deleteStudent(id, dlg)
@@ -60,8 +61,8 @@
 
         }
 
-
-        function newStudent() {
+            //------------------------------Create----------------------------------------------------------------------------------------------
+        function newStudentClicked() {
             $("#newDialog").load("/Asiakas/CreateView", function () {
                 $("#newDialog").dialog(
                     {
@@ -75,10 +76,8 @@
             });
         }
         function createStudent(dlg) {
-            debugger
-
             var newoppilas = $("#newStudentForm").serialize();
-            
+
             $.ajax({
                 type: "POST",
                 data: newoppilas,
@@ -90,10 +89,45 @@
                     getStudents();
                 },
                 error: function (data) {
-                    alert(data.msg); 
+                    alert(data.msg);
                 }
             });
+        }
+            //------------------------------Edit----------------------------------------------------------------------------------------------
+        function editClicked(id) {
+
+            // jQuery UI pitää lisät Bower:n kautta (Projektin päällä hiiren oikean napin alta Manage Bower Packages ... )
+            $("#editDialog").load("/Asiakas/EditView", { id: id }, function () {
+
+                $("#editDialog").dialog(
+                    {
+                        title: "Poistetaanko asiakas?", width: 600, height: 800, modal: true, buttons: {
+                            OK: function () {
+                                editStudent($(this));
+                            },
+                            Cancel: function () { $(this).dialog("close") }
+                        }
+                    })
+            });
+        }
+        function editStudent(dlg) {
             
+            var oppilas = $("#editStudentForm").serialize();
+
+            $.ajax({
+                type: "POST",
+                data: oppilas,
+                dataType: "json",
+                url: "/Asiakas/EditStudent/",
+                success: function (data) {
+                    alert(data.msg);
+                    dlg.dialog("close");
+                    getStudents();
+                },
+                error: function (data) {
+                    alert(data.msg);
+                }
+            });
         }
 
     </script>
@@ -106,9 +140,9 @@
 
 <div id="divStudentList">
 </div>
-
 <div id="deleteDialog">
 </div>
-
 <div id="newDialog">
+</div>
+<div id="editDialog">
 </div>

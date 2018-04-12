@@ -46,7 +46,8 @@
                 @Html.DisplayFor(modelItem => item.Asiakastyyppi.Selite)
             </td>
             <td>
-                <a onclick="deleteClicked(@item.Avain)">Delete</a>
+                <a onclick="deleteClicked(@item.Avain)">Poista</a>
+                <a onclick="editClicked(@item.Avain)">Muokkaa</a>
             </td>
         </tr>
 }

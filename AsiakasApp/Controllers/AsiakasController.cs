@@ -25,6 +25,10 @@ namespace AsiakasApp.Controllers
             return View();
         }
 
+        private bool OppilasExists(int id)
+        {
+            return _context.Asiakkaat.Any(e => e.Avain == id);
+        }
         public IActionResult Delete(int id)
         {
             var r = _context.Asiakkaat.Where(t => t.Avain == id).SingleOrDefault();
@@ -46,6 +50,17 @@ namespace AsiakasApp.Controllers
 
             return PartialView("StudentList", r);
         }
+        public IActionResult EditView(int id)
+        {
+            var oppilas = _context.Asiakkaat.SingleOrDefault(m => m.Avain == id);
+            if (oppilas == null)
+            {
+                return NotFound();
+            }
+            ViewData["AsiakastyyppiID"] = new SelectList(_context.AsiakasTyypit, "AsiakastyyppiID", "AsiakastyyppiID", oppilas.AsiakastyyppiID);
+
+            return PartialView("Edit", oppilas);
+        }
         public IActionResult CreateView()
         {
 
@@ -53,7 +68,6 @@ namespace AsiakasApp.Controllers
             return PartialView("Create");
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult CreateStudent([Bind("Avain,Nimi,Osoite,Postinro,Postitmp,Luontipvm,AsiakastyyppiID")] Asiakas newoppilas)
         {
             newoppilas.AsiakastyyppiID = null;
@@ -70,6 +84,36 @@ namespace AsiakasApp.Controllers
             {
                 msg = "Lisäys epäonnistui!"
             });
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditStudent([Bind("Avain,Nimi,Osoite,Postinro,Postitmp,Luontipvm,AsiakastyyppiID")] Asiakas oppilas)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(oppilas);
+                     _context.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!OppilasExists(oppilas.Avain))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return Json(new
+                {
+                    msg = "Oppilas muokattu!"
+                });
+            }
+            ViewData["AsiakastyyppiID"] = new SelectList(_context.AsiakasTyypit, "AsiakastyyppiID", "AsiakastyyppiID", oppilas.AsiakastyyppiID);
+            return PartialView("Edit", oppilas);
         }
 
         public IActionResult GetStudents(string name, string address)

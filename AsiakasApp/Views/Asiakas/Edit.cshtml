@@ -1,17 +1,16 @@
 ﻿@model AsiakasApp.Models.Asiakas
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
 }
 
-<h2>Create</h2>
-
-<h4>Asiakas</h4>
+<h2>Muokkaa</h2>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Edit" id="editStudentForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Avain" />
             <div class="form-group">
                 <label asp-for="Nimi" class="control-label"></label>
                 <input asp-for="Nimi" class="form-control" />
@@ -39,17 +38,11 @@
             </div>
             <div class="form-group">
                 <label asp-for="AsiakastyyppiID" class="control-label"></label>
-                <select asp-for="AsiakastyyppiID" class ="form-control" asp-items="ViewBag.AsiakastyyppiID"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <select asp-for="AsiakastyyppiID" class="form-control" asp-items="ViewBag.AsiakastyyppiID"></select>
+                <span asp-validation-for="AsiakastyyppiID" class="text-danger"></span>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
