@@ -82,8 +82,10 @@
             $.ajax({
                 type: "POST",
                 data: newoppilas,
+                dataType: "json",
                 url: "/Asiakas/CreateStudent/",
                 success: function (data) {
+                    alert(data.msg);
                     dlg.dialog("close");
                     getStudents();
                 },

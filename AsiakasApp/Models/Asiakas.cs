@@ -16,8 +16,8 @@ namespace AsiakasApp.Models
         public string Osoite { get; set; }
         public string Postinro { get; set; }
         public string Postitmp { get; set; }
-        public DateTime Luontipvm { get; set; }
-        public int AsiakastyyppiID { get; set; }
+        public DateTime? Luontipvm { get; set; }
+        public int? AsiakastyyppiID { get; set; }
 
         public Asiakastyyppi Asiakastyyppi { get; set; }
     }

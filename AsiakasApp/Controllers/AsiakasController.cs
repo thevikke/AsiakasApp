@@ -54,12 +54,13 @@ namespace AsiakasApp.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateStudent([Bind("Avain,Nimi,Osoite,Postinro,Postitmp,Luontipvm,AsiakastyyppiID")] Asiakas newoppilas)
+        public IActionResult CreateStudent([Bind("Avain,Nimi,Osoite,Postinro,Postitmp,Luontipvm,AsiakastyyppiID")] Asiakas newoppilas)
         {
+            newoppilas.AsiakastyyppiID = null;
             if (ModelState.IsValid)
             {
                 _context.Add(newoppilas);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
                 return Json(new
                 {
                     msg = "Oppilas lisätty!"
