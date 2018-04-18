@@ -70,7 +70,7 @@ namespace AsiakasApp.Controllers
         [HttpPost]
         public IActionResult CreateStudent([Bind("Avain,Nimi,Osoite,Postinro,Postitmp,Luontipvm,AsiakastyyppiID")] Asiakas newoppilas)
         {
-            newoppilas.AsiakastyyppiID = null;
+   
             if (ModelState.IsValid)
             {
                 _context.Add(newoppilas);
